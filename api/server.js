@@ -1,17 +1,23 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
+const connectToDatabase = require('./database/database');
 
-
-const PORT = 3000;
+const productsRouter = require('./routes/product-routes');
 
 const app = express();
+const port = 3000;
 
 app.use(cors());
+app.use(express.json());
 
+connectToDatabase().then(() => {
+    app.use(productsRouter);
 
-app.listen(PORT, (err) => {
-    err ? console.log(err) : console.log(`Server on port ${PORT}`)
-})
+    module.exports = app;
 
-
-// npm i nodemon --save-dev
+    app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+    });
+}).catch(error => {
+    console.error('Error starting the server\n', error);
+});
