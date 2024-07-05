@@ -46,7 +46,11 @@ const getProduct = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
-
+    try {
+        res.status(201).json({ message: 'Product added' });
+    } catch(err) {
+        handleError(res, err)
+    }
 }
 
 module.exports = {
