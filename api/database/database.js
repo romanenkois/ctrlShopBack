@@ -1,7 +1,8 @@
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
-const uri = process.env.CONNECTION_STRING;
+// const uri = process.env.CONNECTION_STRING;
+const uri = 'mongodb+srv://romanenkoisnot:9stXVJT4g67EYNqI@cluster0.zbros9z.mongodb.net/';
 const dbName = 'ctrlShop';
 
 let db;
