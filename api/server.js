@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectToDatabase = require('./database/database');
 
 const productsRouter = require('./routes/product-routes');
+const imagesRouter = require('./routes/image-routes');
 
 const app = express();
 const port = 3000;
@@ -12,6 +13,7 @@ app.use(express.json());
 
 connectToDatabase().then(() => {
     app.use(productsRouter);
+    app.use(imagesRouter);
 
     module.exports = app;
 
