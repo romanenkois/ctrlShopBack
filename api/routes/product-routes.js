@@ -11,6 +11,6 @@ const {
 
 router.get('/products/', getProducts);
 router.get('/products/:id', getProduct);
-router.post('/products/', upload.array('images', 3), addProduct);
+router.post('/products/', upload.array('images', 5), addProduct);
 
 module.exports = router;

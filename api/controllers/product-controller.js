@@ -63,11 +63,8 @@ const addProduct = async (req, res) => {
 
         const productDocument = {
             name: req.body.name,
-            title: req.body.title,
             description: req.body.description,
-            info: req.body.info,
-            date: req.body.date,
-            link: req.body.link,
+            price: req.body.info,
             image: imageIds.map(id => `https://ctrl-shop-back.vercel.app/image/${id}`)
         };
 
