@@ -1,3 +1,8 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() });
+
 const {ObjectId} = require('mongodb');
 const { getDb } = require('../database/database');
 
@@ -63,9 +68,7 @@ const addProduct = async (req, res) => {
 
         const productDocument = {
             name: req.body.name,
-            description: req.body.description,
-            price: req.body.info,
-            image: imageIds.map(id => `https://ctrl-shop-back.vercel.app/image/${id}`)
+            image: imageIds.map(id => `http://localhost:3000/image/${id}`)
         };
 
         const result = await collection.insertOne(productDocument);

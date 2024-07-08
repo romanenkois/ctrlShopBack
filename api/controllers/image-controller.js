@@ -12,7 +12,7 @@ const handleError = (res, error) => {
 const getImage = async (req, res) => {
     try {
         const db = getDb();
-        const collection = db.collection('images');
+        const collection = db.collection(collectionName);
         const image = await collection.findOne({ _id: new ObjectId(req.params.id) });
 
         if (!image) {
