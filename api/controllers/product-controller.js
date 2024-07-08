@@ -68,7 +68,7 @@ const addProduct = async (req, res) => {
 
         const productDocument = {
             name: req.body.name,
-            image: imageIds.map(id => `http://localhost:3000/image/${id}`)
+            image: imageIds.map(id => `https://ctrl-shop-back.vercel.app/image/${id}`)
         };
 
         const result = await collection.insertOne(productDocument);

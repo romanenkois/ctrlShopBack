@@ -11,6 +11,6 @@ const {
 
 router.get('/products/', getProducts);
 router.get('/products/:id', getProduct);
-router.post('/products/', upload.array('image'), async (req, res) => {addProduct(req, res);});
+router.post('/products/', upload.array('image', 8), async (req, res) => {addProduct(req, res);});
 
 module.exports = router;
