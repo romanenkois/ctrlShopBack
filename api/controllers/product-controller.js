@@ -4,7 +4,6 @@ const { getDb } = require('../database/database');
 const collectionName = 'products';
 
 const handleError = (res, error) => {
-    
     console.error('AN ERROR OCCURRED\n', error);
     res.status(500).json({ error });
 }
@@ -48,7 +47,6 @@ const getProduct = async (req, res) => {
 const addProduct = async (req, res) => {
     try {
         const db = getDb();
-        const collection = db.collection(collectionName);
 
         const imageDocuments = req.files.map(file => ({
             filename: file.originalname,
@@ -57,7 +55,11 @@ const addProduct = async (req, res) => {
         }));
 
         const imageIds = await Promise.all(imageDocuments.map(async (imgDoc) => {
-            const result = await db.collection('images').insertOne(imgDoc);
+            const result =
+                await getDb()
+                .collection('images')
+                .insertOne(imgDoc);
+
             return result.insertedId;
         }));
 
@@ -69,7 +71,10 @@ const addProduct = async (req, res) => {
             image: imageIds.map(id => `https://ctrl-shop-back.vercel.app/image/${id}`)
         };
 
-        const result = await collection.insertOne(productDocument);
+        const result =
+            await getDb()
+            .collection(collectionName)
+            .insertOne(productDocument);
         
         res.status(201).json({ message: 'new product has been added', id: result.insertedId });
     } catch(err) {
@@ -85,8 +90,10 @@ const deleteProduct = async(req, res) => {
             return res.status(400).json({ error: 'wrong id type' });
         }
 
-        const productId = req.params.id;
-        const product = await db.collection(collectionName).findOne({ _id: new ObjectId(productId) });
+        const product =
+            await getDb()
+            .collection(collectionName)
+            .findOne({ _id: new ObjectId(req.params.id) });
 
         if (!product) {
             return res.status(404).json({ error: 'product does not exist' });
@@ -94,8 +101,13 @@ const deleteProduct = async(req, res) => {
 
         const imageIds = product.image.map(imgUrl => new ObjectId(imgUrl.split('/').pop()));
 
-        await db.collection('images').deleteMany({ _id: { $in: imageIds } });
-        await db.collection(collectionName).deleteOne({ _id: new ObjectId(productId) });
+        await getDb()
+            .collection('images')
+            .deleteMany({ _id: { $in: imageIds } });
+        
+        await getDb()
+            .collection(collectionName)
+            .deleteOne({ _id: new ObjectId(req.params.id) });
 
         res.status(200).json({ message: 'product has been deleted' });
     } catch (error) {
