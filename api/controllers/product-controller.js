@@ -86,18 +86,16 @@ const deleteProduct = async(req, res) => {
         }
 
         const productId = req.params.id;
-        console.log('productId: ', productId);
-        const product = await db.collection('products').findOne({ _id: new ObjectId(productId) });
-        console.log('product: ', product);
+        const product = await db.collection(collectionName).findOne({ _id: new ObjectId(productId) });
 
         if (!product) {
             return res.status(404).json({ error: 'product does not exist' });
         }
 
         const imageIds = product.image.map(imgUrl => new ObjectId(imgUrl.split('/').pop()));
-        await db.collection('images').deleteMany({ _id: { $in: imageIds } });
 
-        await db.collection('products').deleteOne({ _id: new ObjectId(productId) });
+        await db.collection('images').deleteMany({ _id: { $in: imageIds } });
+        await db.collection(collectionName).deleteOne({ _id: new ObjectId(productId) });
 
         res.status(200).json({ message: 'product has been deleted' });
     } catch (error) {
