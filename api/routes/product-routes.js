@@ -3,10 +3,6 @@ const router = express.Router();
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
-const {ObjectId} = require('mongodb');
-const { getDb } = require('../database/database');
-
-
 const {
     getProducts,
     getProduct,
