@@ -1,9 +1,4 @@
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
-
-const {ObjectId} = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { getDb } = require('../database/database');
 
 const collectionName = 'products';
@@ -76,14 +71,43 @@ const addProduct = async (req, res) => {
 
         const result = await collection.insertOne(productDocument);
         
-        res.status(201).json({ message: 'new product document has been inserted', id: result.insertedId });
+        res.status(201).json({ message: 'new product has been added', id: result.insertedId });
     } catch(err) {
         handleError(res, err)
     }
 }
 
+const deleteProduct = async(req, res) => {
+    try {
+        const db = getDb();
+
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'wrong id type' });
+        }
+
+        const productId = req.params.id;
+        console.log('productId: ', productId);
+        const product = await db.collection('products').findOne({ _id: new ObjectId(productId) });
+        console.log('product: ', product);
+
+        if (!product) {
+            return res.status(404).json({ error: 'product does not exist' });
+        }
+
+        const imageIds = product.image.map(imgUrl => new ObjectId(imgUrl.split('/').pop()));
+        await db.collection('images').deleteMany({ _id: { $in: imageIds } });
+
+        await db.collection('products').deleteOne({ _id: new ObjectId(productId) });
+
+        res.status(200).json({ message: 'product has been deleted' });
+    } catch (error) {
+        handleError(res, error);
+    }
+}    
+
 module.exports = {
     getProducts,
     getProduct,
-    addProduct
+    addProduct,
+    deleteProduct
 }
