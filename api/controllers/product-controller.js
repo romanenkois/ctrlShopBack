@@ -65,6 +65,7 @@ const addProduct = async (req, res) => {
 
         const productDocument = {
             name: req.body.name,
+            category: req.body.category,
             price: req.body.price,
             description: req.body.description,
             // more to be added
