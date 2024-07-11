@@ -49,13 +49,14 @@ const getProductTypePagination = async (req, res) => {
                 await getDb()
                 .collection(collectionName)
                 .find({})
-                .skip((req.params.page - 1) * 2)
-                .limit(2)
+                .skip((req.params.page - 1) * 10)
+                .limit(10)
                 .toArray();
 
-            const type = req.params.type;
-            const query = type === 'all' ? {} : { type };
-            const itemsCount = await getDb().collection(collectionName).countDocuments(query);
+            const itemsCount =
+                await getDb()
+                .collection(collectionName)
+                .countDocuments({});
             
             res.status(200).json({result, itemsCount});
         } else {
@@ -67,9 +68,10 @@ const getProductTypePagination = async (req, res) => {
             .limit(10)
             .toArray();
             
-            const type = req.params.type;
-            const query = type === 'all' ? {} : { type };
-            const itemsCount = await getDb().collection(collectionName).countDocuments(query);
+            const itemsCount =
+                await getDb()
+                .collection(collectionName)
+                .countDocuments({ category: req.params.type});
             
             res.status(200).json({result, itemsCount});
         }
