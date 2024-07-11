@@ -24,7 +24,6 @@ const getProducts = async (_req, res) => {
 }
 
 const getProductsType = async (req, res) => {
-
     try {
         if (req.params.type == 'all') {
             getProducts(req, res);
@@ -37,6 +36,44 @@ const getProductsType = async (req, res) => {
         
             res.status(200).json(result);
         }
+        
+    } catch(err) {
+        handleError(res, err)
+    };
+}
+
+const getProductTypePagination = async (req, res) => {
+    try {
+        if (req.params.type == 'all') {
+            const result = 
+                await getDb()
+                .collection(collectionName)
+                .find({})
+                .skip((req.params.page - 1) * 2)
+                .limit(2)
+                .toArray();
+
+            const type = req.params.type;
+            const query = type === 'all' ? {} : { type };
+            const itemsCount = await getDb().collection(collectionName).countDocuments(query);
+            
+            res.status(200).json({result, itemsCount});
+        } else {
+            const result = 
+            await getDb()
+            .collection(collectionName)
+            .find({ category: req.params.type })
+            .skip((req.params.page - 1) * 10)
+            .limit(10)
+            .toArray();
+            
+            const type = req.params.type;
+            const query = type === 'all' ? {} : { type };
+            const itemsCount = await getDb().collection(collectionName).countDocuments(query);
+            
+            res.status(200).json({result, itemsCount});
+        }
+
         
     } catch(err) {
         handleError(res, err)
@@ -139,6 +176,7 @@ const deleteProduct = async(req, res) => {
 module.exports = {
     getProducts,
     getProductsType,
+    getProductTypePagination,
     getProduct,
     addProduct,
     deleteProduct
