@@ -24,14 +24,20 @@ const getProducts = async (_req, res) => {
 }
 
 const getProductsType = async (req, res) => {
+
     try {
-        const result = 
+        if (req.params.type == 'all') {
+            getProducts(req, res);
+        } else {
+            const result = 
             await getDb()
             .collection(collectionName)
             .find({ category: req.params.type })
             .toArray();
         
-        res.status(200).json(result);
+            res.status(200).json(result);
+        }
+        
     } catch(err) {
         handleError(res, err)
     };
