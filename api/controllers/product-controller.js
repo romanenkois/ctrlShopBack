@@ -23,6 +23,20 @@ const getProducts = async (_req, res) => {
     };
 }
 
+const getProductsType = async (req, res) => {
+    try {
+        const result = 
+            await getDb()
+            .collection(collectionName)
+            .find({ category: req.params.type })
+            .toArray();
+        
+        res.status(200).json(result);
+    } catch(err) {
+        handleError(res, err)
+    };
+}
+
 const getProduct = async (req, res) => {
     try {
         if (!ObjectId.isValid(req.params.id)) {
@@ -118,6 +132,7 @@ const deleteProduct = async(req, res) => {
 
 module.exports = {
     getProducts,
+    getProductsType,
     getProduct,
     addProduct,
     deleteProduct
