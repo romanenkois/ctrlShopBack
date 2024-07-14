@@ -103,6 +103,26 @@ const getProduct = async (req, res) => {
     };
 }
 
+const getProductsSelection = async (req, res) => {
+    try {
+        let result = [];
+        for (const key in req.body) {
+            let product = req.body[key];
+            let id = product.productId;
+
+            const res = 
+                await getDb()
+                .collection(collectionName)
+                .findOne({ _id: new ObjectId(id) });
+                
+            result.push(res);
+        }
+        res.status(200).json(result);
+    } catch(err) {
+        handleError(res, err)
+    }
+}
+
 const addProduct = async (req, res) => {
     try {
         const db = getDb();
@@ -180,6 +200,7 @@ module.exports = {
     getProductsType,
     getProductTypePagination,
     getProduct,
+    getProductsSelection,
     addProduct,
     deleteProduct
 }
