@@ -61,7 +61,7 @@ const addOrder = async (req, res) => {
             .collection(collectionName)
             .insertOne(orderDocument);
         
-        res.status(201).json({ message: 'new product has been added', id: result.insertedId });
+        res.status(201).json({ message: 'new order has been added', id: result.insertedId });
     } catch(err) {
         handleError(res, err)
     }
