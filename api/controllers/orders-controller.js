@@ -54,6 +54,8 @@ const addOrder = async (req, res) => {
             checkStatus: 'pending',
             orderData: JSON.parse(req.body.orderData),
             customerData: JSON.parse(req.body.ordererData),
+            deliveryData: JSON.parse(req.body.deliveryData),
+            extraData: JSON.parse(req.body.extraData),
         };
 
         const result =
