@@ -53,7 +53,7 @@ const addOrder = async (req, res) => {
             userId: req.body.userId,
             checkStatus: 'pending',
             orderData: JSON.parse(req.body.orderData),
-            customerData: JSON.parse(req.body.ordererData),
+            customerData: JSON.parse(req.body.customerData),
             deliveryData: JSON.parse(req.body.deliveryData),
             extraData: JSON.parse(req.body.extraData),
         };
