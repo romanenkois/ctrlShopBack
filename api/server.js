@@ -5,6 +5,8 @@ const connectToDatabase = require('./database/database');
 const productsRouter = require('./routes/product-routes');
 const imagesRouter = require('./routes/image-routes');
 const ordersRouter = require('./routes/orders-routes');
+const reviewsRouter = require('./routes/review-routes');
+// const userRouter = require('./routes/user-routes'); 
 
 const app = express();
 const port = 3000;
@@ -15,7 +17,8 @@ app.use(express.json());
 connectToDatabase().then(() => {
     app.use(productsRouter);
     app.use(imagesRouter);
-    app.use(ordersRouter)
+    app.use(ordersRouter);
+    app.use(reviewsRouter);
 
     module.exports = app;
 
