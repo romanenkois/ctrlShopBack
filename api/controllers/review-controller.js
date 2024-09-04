@@ -83,6 +83,8 @@ const addReview = async (req, res) => {
         const insertDocument = {
             date: req.body.date,
             userId: req.body.userId,
+            userName: req.body.userName,
+            userPicture: 'https://ctrl-shop-back.vercel.app/defaultPicture/',// req.body.userPicture,
             productId: req.body.productId,
             reviewText: req.body.reviewText,
             reviewRating: req.body.reviewRating,
@@ -101,10 +103,36 @@ const addReview = async (req, res) => {
     }
 }
 
+const deleteReview = async(req, res) => {
+    try {
+        if (!ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: 'wrong id type' });
+        }
+
+        const review =
+            await getDb()
+            .collection(collectionName)
+            .findOne({ _id: new ObjectId(req.params.id) });
+
+        if (!review) {
+            return res.status(404).json({ error: 'review does not exist' });
+        }
+
+        await getDb()
+            .collection(collectionName)
+            .deleteOne({ _id: new ObjectId(req.params.id) });
+
+        res.status(200).json({ message: 'review has been deleted' });
+    } catch (error) {
+        handleError(res, error);
+    }
+}  
+
 module.exports = {
     getReview,
     getReviews,
     getAllReviews,
     getProductReview,
-    addReview
+    addReview,
+    deleteReview,
 }

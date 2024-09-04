@@ -9,7 +9,7 @@ const {
     getAllReviews,
     getProductReview,
     addReview,
-
+    deleteReview,
 } = require('../controllers/review-controller');
 
 router.get('/review/:id', getReview);
@@ -17,5 +17,6 @@ router.get('/reviews/', getReviews);
 router.get('/reviewsAll/', getAllReviews);
 router.get('/reviews/:id', getProductReview);
 router.post('/review/', upload.none(), async (req, res) => {addReview(req, res);});
+router.delete('/review/:id', deleteReview);
 
 module.exports = router;
