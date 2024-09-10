@@ -80,6 +80,8 @@ const getProductReview = async (req, res) => {
 
 const addReview = async (req, res) => {
     try {
+        // console.log(req.body);
+
         const insertDocument = {
             date: req.body.date,
             userId: req.body.userId,
