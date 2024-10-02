@@ -44,25 +44,39 @@ const getProductsType = async (req, res) => {
 
 const getProductTypePagination = async (req, res) => {
     try {
-        const typeCriteria = {};
-        if (req.params.type != 'all') {
-            typeCriteria.category = req.params.type;
-        }
+        if (req.params.type == 'all') {
+            const result = 
+                await getDb()
+                .collection(collectionName)
+                .find({})
+                .skip((req.params.page - 1) * 10)
+                .limit(10)
+                .toArray();
 
-        const result = 
-        await getDb()
-        .collection(collectionName)
-        .find({ category: req.params.type })
-        .skip((req.params.page - 1) * 10)
-        .limit(10)
-        .toArray();
-        
-        const itemsCount =
+            const itemsCount =
+                await getDb()
+                .collection(collectionName)
+                .countDocuments({});
+            
+            res.status(200).json({result, itemsCount});
+        } else {
+            const result = 
             await getDb()
             .collection(collectionName)
-            .countDocuments({ category: req.params.type});
+            .find({ category: req.params.type })
+            .skip((req.params.page - 1) * 10)
+            .limit(10)
+            .toArray();
+            
+            const itemsCount =
+                await getDb()
+                .collection(collectionName)
+                .countDocuments({ category: req.params.type});
+            
+            res.status(200).json({result, itemsCount});
+        }
+
         
-        res.status(200).json({result, itemsCount});        
     } catch(err) {
         handleError(res, err)
     };
