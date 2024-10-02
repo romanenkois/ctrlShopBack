@@ -90,6 +90,7 @@ const addReview = async (req, res) => {
             productId: req.body.productId,
             reviewText: req.body.reviewText,
             reviewRating: req.body.reviewRating,
+            userPicture: req.body.userPicture,
             // checkStatus: 'pending',
             checkStatus:'confirmed',
         };
