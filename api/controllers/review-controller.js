@@ -86,7 +86,6 @@ const addReview = async (req, res) => {
             date: req.body.date,
             userId: req.body.userId,
             userName: req.body.userName,
-            userPicture: 'https://ctrl-shop-back.vercel.app/defaultPicture/',// req.body.userPicture,
             productId: req.body.productId,
             reviewText: req.body.reviewText,
             reviewRating: req.body.reviewRating,
