@@ -89,39 +89,56 @@ const getProductTypePaginationSorting = async (req, res) => {
             typeCriteria.category = req.params.type;
         }
 
+        const sortDirection = req.params.sorting === 'price-asc' ? 1 : req.params.sorting === 'price-desc' ? -1 : 0;
         const sortCriteria = {};
-        if (req.params.sorting === 'price-asc') {
-            sortCriteria.price = 1;
-        } else if (req.params.sorting === 'price-desc') {
-            sortCriteria.price = -1;
-        } else if (req.params.sorting === 'name-asc') {
+
+        if (sortDirection !== 0) {
+            const result = await getDb()
+                .collection(collectionName)
+                .aggregate([
+                    { $match: typeCriteria },
+                    {
+                        $addFields: {
+                            priceAsNumber: { $toDouble: "$price" }
+                        }
+                    },
+                    { $sort: { priceAsNumber: sortDirection } },
+                    { $skip: (req.params.page - 1) * 10 },
+                    { $limit: 10 }
+                ]).toArray();
+            
+            const itemsCount = await getDb()
+                .collection(collectionName)
+                .countDocuments({ category: req.params.type });
+
+            return res.status(200).json({ result, itemsCount });
+        }
+
+        if (req.params.sorting === 'name-asc') {
             sortCriteria.name = 1;
         } else if (req.params.sorting === 'name-desc') {
             sortCriteria.name = -1;
         }
 
-        console.log(sortCriteria);
-
-        const result = 
-            await getDb()
+        const result = await getDb()
             .collection(collectionName)
             .find(typeCriteria)
             .sort(sortCriteria)
             .skip((req.params.page - 1) * 10)
             .limit(10)
             .toArray();
-        
-        const itemsCount =
-            await getDb()
+
+        const itemsCount = await getDb()
             .collection(collectionName)
-            .countDocuments({ category: req.params.type});
-        
-        res.status(200).json({result, itemsCount});
-        
-    } catch(err) {
-        handleError(res, err)
-    };
-}
+            .countDocuments({ category: req.params.type });
+
+        res.status(200).json({ result, itemsCount });
+
+    } catch (err) {
+        handleError(res, err);
+    }
+};
+
 
 const getProduct = async (req, res) => {
     try {
