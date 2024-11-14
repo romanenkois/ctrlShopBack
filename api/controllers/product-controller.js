@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb');
 const { getDb } = require('../database/database');
 
 const collectionName = 'products';
+const itemsPerPage = 50;
 
 const handleError = (res, error) => {
     console.error('AN ERROR OCCURRED\n', error);
@@ -49,8 +50,8 @@ const getProductTypePagination = async (req, res) => {
                 await getDb()
                 .collection(collectionName)
                 .find({})
-                .skip((req.params.page - 1) * 10)
-                .limit(10)
+                .skip((req.params.page - 1) * itemsPerPage)
+                .limit(itemsPerPage)
                 .toArray();
 
             const itemsCount =
@@ -64,8 +65,8 @@ const getProductTypePagination = async (req, res) => {
             await getDb()
             .collection(collectionName)
             .find({ category: req.params.type })
-            .skip((req.params.page - 1) * 10)
-            .limit(10)
+            .skip((req.params.page - 1) * itemsPerPage)
+            .limit(itemsPerPage)
             .toArray();
             
             const itemsCount =
@@ -84,7 +85,7 @@ const getProductTypePagination = async (req, res) => {
 
 const getProductTypePaginationSorting = async (req, res) => {
     try {
-        const itemsPerPage = 50;
+        
 
         const typeCriteria = {};
         if (req.params.type != 'all') {
@@ -127,7 +128,7 @@ const getProductTypePaginationSorting = async (req, res) => {
             .find(typeCriteria)
             .sort(sortCriteria)
             .skip((req.params.page - 1) * itemsPerPage)
-            .limit(10)
+            .limit(itemsPerPage)
             .toArray();
 
         const itemsCount = await getDb()
