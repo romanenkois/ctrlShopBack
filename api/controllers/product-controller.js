@@ -84,6 +84,8 @@ const getProductTypePagination = async (req, res) => {
 
 const getProductTypePaginationSorting = async (req, res) => {
     try {
+        const itemsPerPage = 50;
+
         const typeCriteria = {};
         if (req.params.type != 'all') {
             typeCriteria.category = req.params.type;
@@ -103,8 +105,8 @@ const getProductTypePaginationSorting = async (req, res) => {
                         }
                     },
                     { $sort: { priceAsNumber: sortDirection } },
-                    { $skip: (req.params.page - 1) * 10 },
-                    { $limit: 10 }
+                    { $skip: (req.params.page - 1) * itemsPerPage },
+                    { $limit: itemsPerPage }
                 ]).toArray();
             
             const itemsCount = await getDb()
