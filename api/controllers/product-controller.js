@@ -126,7 +126,7 @@ const getProductTypePaginationSorting = async (req, res) => {
             .collection(collectionName)
             .find(typeCriteria)
             .sort(sortCriteria)
-            .skip((req.params.page - 1) * 10)
+            .skip((req.params.page - 1) * itemsPerPage)
             .limit(10)
             .toArray();
 
